@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${auto.id} ? 'Editar Auto' : 'Nuevo Auto'">Title</title>
+</head>
+<body>
+
+    <form method="POST" th:action="@{/autos/guardar}" th:object="${auto}" >
+
+        <h2 th:text="${auto.id} ? 'Editar Auto' : 'Nuevo Auto'"></h2>
+
+        <input type="hidden" th:field="*{id}" />
+
+        <label>
+            Marca:
+            <input type="text" th:field="*{marca}" required />
+        </label>
+        <br/>
+
+        <label>
+            Modelo:
+            <input type="text" th:field="*{modelo}" required />
+        </label>
+        <br/>
+
+        <label>
+            Kilometraje:
+            <input type="number" th:field="*{kilometraje}" required />
+        </label>
+        <br/>
+
+        <label>
+            Disponible:
+            <input type="checkbox" th:field="*{disponible}" />
+        </label>
+        <br/>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+</body>
+</html>

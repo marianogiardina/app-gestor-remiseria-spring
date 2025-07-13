@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion Chofer</title>
+</head>
+<body>
+    <h1>Gestion de Autos</h1>
+    <a th:href="@{/chofer/crear}">Nuevo Chofer</a>
+    <table>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Dni</th>
+        <th>Celular</th>
+        <th>Auto Propio</th>
+        <th>Disponible</th>
+        <th>Auto Alquilado</th>
+        <th>Accion</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="chofer : ${lista}">
+        <td th:text="${chofer.id}"></td>
+        <td th:text="${chofer.nombre}"></td>
+        <td th:text="${chofer.dni}"></td>
+        <td th:text="${chofer.celular}"></td>
+        <td th:text="${chofer.autoPropio} ? 'Si' : 'No'"></td>
+        <td th:text="${chofer.disponible} ? 'Disponible' : 'Realizando traslado'"></td>
+        <td th:text="${chofer.autoAlquilado != null} ? ${chofer.autoAlquilado.marca} + ' ' + ${chofer.autoAlquilado.modelo} : 'Tiene auto propio'"></td>
+        <td>
+          <a th:href="@{/chofer/editar/{id}(id=${chofer.id})}">Editar</a>
+          <a th:href="@{/chofer/eliminar/{id}(id=${chofer.id})}">Eliminar</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+</body>
+</html>

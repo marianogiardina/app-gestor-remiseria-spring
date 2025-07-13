@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'">Title</title>
+</head>
+<body>
+    <form method="POST" th:action="@{/chofer/guardar}" th:object="${chofer}" >
+
+        <h2 th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'"></h2>
+
+        <input type="hidden" th:field="*{id}" />
+
+        <label>
+            Nombre:
+            <input type="text" th:field="*{nombre}" required />
+        </label>
+        <br/>
+
+        <label>
+            DNI:
+            <input type="text" th:field="*{dni}" required />
+        </label>
+        <br/>
+
+        <label>
+            Celular:
+            <input type="number" th:field="*{celular}" required />
+        </label>
+        <br/>
+
+        <label>
+            Auto Propio:
+            <input type="checkbox" th:field="*{autoPropio}" id="autoPropioCheckbox" onchange="ocultarAsignarAuto()"/>
+        </label>
+        <br/>
+
+        <label>
+            Disponible:
+            <input type="checkbox" th:field="*{disponible}" />
+        </label>
+        <br/>
+
+        <label id="selectAutoAlquiladoLabel">
+            Asignar auto:
+
+            <select th:field="*{autoAlquilado}" id="autoSelect">
+                <option th:each="auto : ${autos}" th:if="${auto.disponible}" th:value="${auto.id}" th:text="|${auto.marca} ${auto.modelo}|"></option>
+            </select>
+        </label>
+        <br/>
+
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script>
+
+        function ocultarAsignarAuto(){
+            const autoPropioCheckbox = document.getElementById('autoPropioCheckbox');
+            const autoSelect = document.getElementById('autoSelect');
+
+            if (autoPropioCheckbox.checked) {
+                autoSelect.disabled = true;
+                autoSelect.value = '';
+            } else {
+                autoSelect.disabled = false;
+            }
+        }
+        // Inicializar el estado del formulario al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            ocultarAsignarAuto();
+        });
+
+    </script>
+</body>
+</html>

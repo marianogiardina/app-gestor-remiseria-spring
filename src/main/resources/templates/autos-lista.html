@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion Autos</title>
+</head>
+<body>
+
+    <h1>Gestion de Autos</h1>
+    <a th:href="@{/autos/crear}">Nuevo Auto</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Kilometraje</th>
+                <th>Disponible</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="auto : ${lista}">
+                <td th:text="${auto.id}"></td>
+                <td th:text="${auto.marca}"></td>
+                <td th:text="${auto.modelo}"></td>
+                <td th:text="${auto.kilometraje}"></td>
+                <td th:text="${auto.disponible} ? 'Disponible' : 'En alquiler'"></td>
+                <td>
+                    <a th:href="@{/autos/editar/{id}(id=${auto.id})}">Editar</a>
+                    <a th:href="@{/autos/eliminar/{id}(id=${auto.id})}">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

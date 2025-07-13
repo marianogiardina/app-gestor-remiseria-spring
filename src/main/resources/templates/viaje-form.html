@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'">Title</title>
+</head>
+<body>
+  <form method="POST" th:action="@{/viajes/guardar}" th:object="${viaje}" >
+
+    <h2 th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'"></h2>
+
+    <input type="hidden" th:field="*{id}" />
+
+    <label>
+      Origen:
+      <input type="text" th:field="*{origen}" required />
+    </label>
+    <br/>
+
+    <label>
+      Destino:
+      <input type="text" th:field="*{destino}" required />
+    </label>
+    <br/>
+
+    <label th:if="${viaje.id == null || viaje.id == 0}">
+      Fecha:
+      <input type="datetime-local"
+             th:field="*{fecha}"
+             required />
+    </label>
+    <br/>
+
+    <label>
+      Kilometros:
+      <input type="number" th:field="*{kilometros}" required />
+    </label>
+
+    <label>
+      Valor por Km:
+      <input type="number" th:field="*{valorKm}" required />
+    </label>
+
+    <label>
+      Estado del Viaje:
+
+      <select th:field="*{estadoViaje}" >
+        <option th:each="estado : ${estadosViaje}" th:text="${estado}" th:value="${estado}" ></option>
+      </select>
+    </label>
+    <br/>
+
+    <label>
+      Choferes disponibles:
+
+      <select th:field="*{chofer}" >
+        <option th:each="chofer : ${chofers}" th:if="${chofer.disponible}" th:value="${chofer.id}" th:text="|${chofer.nombre}|"></option>
+      </select>
+    </label>
+    <br/>
+
+    <button type="submit">Guardar</button>
+  </form>
+</body>
+</html>

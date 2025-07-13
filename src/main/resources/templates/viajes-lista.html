@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Viajes</title>
+</head>
+<body>
+
+    <h1>Gestion de Autos</h1>
+    <a th:href="@{/viajes/crear}">Nuevo Viaje</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Chofer</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Estado</th>
+            <th>Kilometros</th>
+            <th>Valor por Km</th>
+            <th>Accion</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="viaje : ${lista}">
+            <td th:text="${viaje.id}"></td>
+            <td th:text="${viaje.fecha}"></td>
+            <td th:text="${viaje.chofer.nombre}"></td>
+            <td th:text="${viaje.origen}"></td>
+            <td th:text="${viaje.destino}"></td>
+            <td th:text="${viaje.estadoViaje}"></td>
+            <td th:text="${viaje.kilometros}"></td>
+            <td th:text="${viaje.valorKm}"></td>
+            <td>
+                <a th:href="@{/viajes/editar/{id}(id=${viaje.id})}">Editar</a>
+                <a th:href="@{/viajes/eliminar/{id}(id=${viaje.id})}">Eliminar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
