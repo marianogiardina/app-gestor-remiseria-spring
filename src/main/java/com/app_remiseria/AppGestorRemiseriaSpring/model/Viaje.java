@@ -1,6 +1,8 @@
 package com.app_remiseria.AppGestorRemiseriaSpring.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +11,7 @@ public class Viaje {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private double kilometros;
     private double valorKm;
@@ -17,19 +19,22 @@ public class Viaje {
     @Enumerated(EnumType.STRING)
     private EstadoViaje estadoViaje;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "chofer_id", referencedColumnName = "id")
     private Chofer chofer;
 
     private String origen;
     private String destino;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime fecha;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -6,6 +6,7 @@ import com.app_remiseria.AppGestorRemiseriaSpring.repository.ChoferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,7 +20,19 @@ public class ChoferService {
 
     public List<Chofer> findAll(){
 
-        return choferRepository.findAll();
+        List<Chofer> choferesActivos = new ArrayList<>();
+
+        for (Chofer chofer : choferRepository.findAll()) {
+
+            if(!chofer.isEliminado()){
+
+                choferesActivos.add(chofer);
+
+            }
+
+        }
+
+        return choferesActivos;
 
     }
 
@@ -29,10 +42,8 @@ public class ChoferService {
 
     public Chofer save(Chofer chofer){
 
-        //Manejo el estado del auto antes de guardar el chofer.
 
         actualizarDisponibilidadDeAuto(chofer, "save");
-
 
         return choferRepository.save(chofer);
     }
@@ -42,12 +53,16 @@ public class ChoferService {
         // Antes de eliminar el chofer, verifico si tiene un auto alquilado y lo marco como disponible.
         Chofer chofer = findById(id);
 
-        actualizarDisponibilidadDeAuto(chofer, "delete");
+        if (chofer != null) {
+            // Marcar como eliminado en lugar de eliminar físicamente
+            chofer.setEliminado(true);
+            chofer.setDisponible(false);
 
-        choferRepository.deleteById(id);
+            actualizarDisponibilidadDeAuto(chofer, "delete");
+
+            choferRepository.save(chofer);
+        }
     }
-
-    //TODO: Si el chofer pasa de tener auto alquilado a tener auto propio, no se actualiza la disponibilidad del auto alquilado.
 
     private void actualizarDisponibilidadDeAuto(Chofer chofer, String metodo) {
 
@@ -55,7 +70,22 @@ public class ChoferService {
 
         switch (metodo) {
             case "save":
+
+                if(chofer.isAutoPropio() && chofer.getId() != null) {
+
+                    Chofer choferSinActualizar = findById(chofer.getId());
+
+                    Auto autoSinActualizar = choferSinActualizar.getAutoAlquilado();
+
+                    if(autoSinActualizar != null) {
+                        // Si el chofer tiene auto propio, el auto alquilado se marca como disponible
+                        autoSinActualizar.setDisponible(true);
+                        autoService.save(autoSinActualizar);
+                    }
+                }
+
                 if (auto != null && !chofer.isAutoPropio()) {
+
                     auto.setDisponible(false);
                     autoService.save(auto);
                 }
@@ -63,6 +93,7 @@ public class ChoferService {
 
             case "delete":
                 if (auto != null && !chofer.isAutoPropio()) {
+                    chofer.setAutoAlquilado(null);
                     auto.setDisponible(true);
                     autoService.save(auto);
                 }

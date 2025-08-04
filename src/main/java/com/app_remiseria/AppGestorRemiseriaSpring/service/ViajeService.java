@@ -29,21 +29,60 @@ public class ViajeService {
     public Viaje save(Viaje viaje){
 
         //Manejo la disponibilidad del chofer al guardar un viaje
-        Chofer chofer = viaje.getChofer();
+        actualizarDisponibilidadChofer(viaje, "save");
 
-        if(viaje.getEstadoViaje() == EstadoViaje.ENCURSO){
-            // Si el viaje está en curso, el chofer no está disponible
-            chofer.setDisponible(false);
-        }else{
-            // Si el viaje no está en curso, el chofer está disponible
-            chofer.setDisponible(true);
-        }
+        //Actualizo los km del auto al finalizar un viaje
+        actualizarKilometrajeAuto(viaje);
 
         return viajeRepository.save(viaje);
     }
 
     public void delete(Long id){
+
+        Viaje viaje = findById(id);
+
+        actualizarDisponibilidadChofer(viaje, "delete");
+
         viajeRepository.deleteById(id);
+    }
+
+    private void actualizarDisponibilidadChofer(Viaje viaje, String metodo) {
+        Chofer chofer = viaje.getChofer();
+
+        switch (metodo) {
+            case "save":
+                if(viaje.getEstadoViaje() == EstadoViaje.ENCURSO){
+                    // Si el viaje está en curso, el chofer no está disponible
+                    chofer.setDisponible(false);
+                }else{
+                    // Si el viaje no está en curso, el chofer está disponible
+                    chofer.setDisponible(true);
+                }
+                break;
+
+            case "delete":
+                // Si el viaje se elimina, el chofer vuelve a estar disponible
+                if (chofer != null) {
+                    chofer.setDisponible(true);
+                }
+                break;
+
+        }
+
+    }
+
+    private void actualizarKilometrajeAuto(Viaje viaje) {
+
+        if (viaje.getEstadoViaje() == EstadoViaje.FINALIZADO) {
+
+            Chofer chofer = viaje.getChofer();
+
+            if (chofer != null && chofer.getAutoAlquilado() != null) {
+
+                chofer.getAutoAlquilado().setKilometraje(chofer.getAutoAlquilado().getKilometraje() + viaje.getKilometros());
+
+            }
+        }
     }
 
 }

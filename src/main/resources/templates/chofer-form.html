@@ -3,70 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'">Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <form method="POST" th:action="@{/chofer/guardar}" th:object="${chofer}" >
+<body class="bg-gray-50 font-sans">
+    <div class="flex min-h-screen">
 
-        <h2 th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'"></h2>
+        <div th:replace="fragments/sidebar :: sidebar"></div>
 
-        <input type="hidden" th:field="*{id}" />
 
-        <label>
-            Nombre:
-            <input type="text" th:field="*{nombre}" required />
-        </label>
-        <br/>
+        <div class="flex-1 flex flex-col">
 
-        <label>
-            DNI:
-            <input type="text" th:field="*{dni}" required />
-        </label>
-        <br/>
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-6 px-8 shadow-lg">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-3xl font-bold" th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'">Nuevo Chofer</h1>
+                    <a href="/chofer" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex items-center">
+                        Volver
+                    </a>
+                </div>
+            </div>
 
-        <label>
-            Celular:
-            <input type="number" th:field="*{celular}" required />
-        </label>
-        <br/>
 
-        <label>
-            Auto Propio:
-            <input type="checkbox" th:field="*{autoPropio}" id="autoPropioCheckbox" onchange="ocultarAsignarAuto()"/>
-        </label>
-        <br/>
+            <div class="flex-1 p-8">
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <div class="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                            <h2 class="text-2xl font-bold text-gray-800" th:text="${chofer.id} ? 'Editar Chofer' : 'Nuevo Chofer'">Nuevo Chofer</h2>
+                            <p class="text-gray-600 mt-1">Complete los datos del chofer</p>
+                        </div>
 
-        <label>
-            Disponible:
-            <input type="checkbox" th:field="*{disponible}" />
-        </label>
-        <br/>
+                        <form method="POST" th:action="@{/chofer/guardar}" th:object="${chofer}" class="p-8">
+                            <input type="hidden" th:field="*{id}" />
 
-        <label id="selectAutoAlquiladoLabel">
-            Asignar auto:
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-            <select th:field="*{autoAlquilado}" id="autoSelect">
-                <option th:each="auto : ${autos}" th:if="${auto.disponible}" th:value="${auto.id}" th:text="|${auto.marca} ${auto.modelo}|"></option>
-            </select>
-        </label>
-        <br/>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-semibold text-gray-700" for="nombre">
+                                        Nombre
+                                    </label>
+                                    <input type="text" th:field="*{nombre}" required id="nombre"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                                           placeholder="Ingrese el nombre completo"
+                                    />
+                                </div>
 
-        <button type="submit">Guardar</button>
-    </form>
+
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-semibold text-gray-700" for="dni">
+                                        DNI
+                                    </label>
+                                    <input type="text" th:field="*{dni}" required id="dni"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                                           placeholder="Ingrese el DNI"
+                                    />
+                                </div>
+
+
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-semibold text-gray-700" for="celular">
+                                        Celular
+                                    </label>
+                                    <input type="number" th:field="*{celular}" required id="celular"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                                           placeholder="Ingrese el número de celular"
+                                    />
+                                </div>
+
+
+                                <div class="space-y-4">
+
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" th:field="*{autoPropio}" id="autoPropioCheckbox" onchange="ocultarAsignarAuto()"
+                                               class="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                        />
+                                        <label for="autoPropioCheckbox" class="text-sm font-semibold text-gray-700 flex items-center">
+                                            Auto Propio
+                                        </label>
+                                    </div>
+
+
+                                    <div class="flex items-center space-x-3">
+                                        <input type="checkbox" th:field="*{disponible} " id="disponibleCheckbox"
+                                               class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                        />
+                                        <label class="text-sm font-semibold text-gray-700 flex items-center" for="disponibleCheckbox">
+                                            Disponible
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="mt-6 space-y-2">
+                                <label id="selectAutoAlquiladoLabel" class="block text-sm font-semibold text-gray-700" for="autoSelect">
+                                    Asignar auto
+                                </label>
+                                <select th:field="*{autoAlquilado}" id="autoSelect"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                    <option value="">-- Seleccionar Auto --</option>
+                                    <option th:each="auto : ${autos}"
+                                            th:if="${auto.disponible}"
+                                            th:value="${auto.id}"
+                                            th:text="|${auto.marca} ${auto.modelo}|">
+                                    </option>
+                                </select>
+                            </div>
+
+
+                            <div class="mt-8 flex justify-end space-x-4">
+                                <a href="/chofer"
+                                   class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                    Cancelar
+                                </a>
+                                <button type="submit"
+                                        class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    Guardar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
 
         function ocultarAsignarAuto(){
+
             const autoPropioCheckbox = document.getElementById('autoPropioCheckbox');
+
             const autoSelect = document.getElementById('autoSelect');
 
             if (autoPropioCheckbox.checked) {
+
                 autoSelect.disabled = true;
-                autoSelect.value = '';
+
             } else {
+
                 autoSelect.disabled = false;
+
             }
         }
-        // Inicializar el estado del formulario al cargar
+
         document.addEventListener('DOMContentLoaded', function() {
             ocultarAsignarAuto();
         });

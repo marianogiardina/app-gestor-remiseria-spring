@@ -1,65 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <title th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'">Title</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <form method="POST" th:action="@{/viajes/guardar}" th:object="${viaje}" >
+<body class="bg-gray-50 font-sans">
+  <div class="flex min-h-screen">
 
-    <h2 th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'"></h2>
+    <div th:replace="fragments/sidebar :: sidebar"></div>
 
-    <input type="hidden" th:field="*{id}" />
 
-    <label>
-      Origen:
-      <input type="text" th:field="*{origen}" required />
-    </label>
-    <br/>
+    <div class="flex-1 flex flex-col">
 
-    <label>
-      Destino:
-      <input type="text" th:field="*{destino}" required />
-    </label>
-    <br/>
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white py-6 px-8 shadow-lg">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold" th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'">Nuevo Viaje</h1>
+          <a href="/viajes" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Volver
+          </a>
+        </div>
+      </div>
 
-    <label th:if="${viaje.id == null || viaje.id == 0}">
-      Fecha:
-      <input type="datetime-local"
-             th:field="*{fecha}"
-             required />
-    </label>
-    <br/>
 
-    <label>
-      Kilometros:
-      <input type="number" th:field="*{kilometros}" required />
-    </label>
+      <div class="flex-1 p-8">
 
-    <label>
-      Valor por Km:
-      <input type="number" th:field="*{valorKm}" required />
-    </label>
+        <div class="max-w-4xl mx-auto">
 
-    <label>
-      Estado del Viaje:
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
 
-      <select th:field="*{estadoViaje}" >
-        <option th:each="estado : ${estadosViaje}" th:text="${estado}" th:value="${estado}" ></option>
-      </select>
-    </label>
-    <br/>
+            <div class="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+              <h2 class="text-2xl font-bold text-gray-800" th:text="${viaje.id} ? 'Editar Viaje' : 'Nuevo Viaje'">Nuevo Viaje</h2>
+            </div>
 
-    <label>
-      Choferes disponibles:
+            <form method="POST" th:action="@{/viajes/guardar}" th:object="${viaje}" class="p-8">
 
-      <select th:field="*{chofer}" >
-        <option th:each="chofer : ${chofers}" th:if="${chofer.disponible}" th:value="${chofer.id}" th:text="|${chofer.nombre}|"></option>
-      </select>
-    </label>
-    <br/>
+              <input type="hidden" th:field="*{id}" />
 
-    <button type="submit">Guardar</button>
-  </form>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="origen">
+                    Origen
+                  </label>
+
+                  <input type="text" th:field="*{origen}" required id="origen"
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                         placeholder="Ingrese el origen del viaje"
+                  />
+
+                </div>
+
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="destino">
+                    Destino
+                  </label>
+
+                  <input type="text" th:field="*{destino}" required id="destino"
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                         placeholder="Ingrese el destino del viaje"
+                  />
+
+                </div>
+
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="fecha">
+                    Fecha
+                  </label>
+
+                  <input type="datetime-local" id="fecha"
+                         th:field="*{fecha}"
+                         th:readonly="${viaje.id != null && viaje.id != 0}"
+                         required
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 read-only:bg-gray-100 read-only:cursor-not-allowed"
+                  />
+
+                </div>
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="km">
+                    Kilometros
+                  </label>
+
+                  <input type="number" th:field="*{kilometros}" required id="km"
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                         placeholder="0" min="0" step="0.1"
+                  />
+
+                </div>
+
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="valorKm">
+                    Valor por Km
+                  </label>
+
+                  <input type="number" th:field="*{valorKm}" required id="valorKm"
+                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                         placeholder="0.00" min="0" step="0.01"
+                  />
+
+                </div>
+
+
+                <div class="space-y-2">
+
+                  <label class="block text-sm font-semibold text-gray-700" for="estadoViaje">
+                    Estado del Viaje
+                  </label>
+
+                  <select th:field="*{estadoViaje}" id="estadoViaje"
+                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                    <option value="">Seleccione un estado</option>
+                    <option th:each="estado : ${estadosViaje}" th:text="${estado}" th:value="${estado}"></option>
+                  </select>
+
+                </div>
+
+              </div>
+
+
+              <div class="mt-6 space-y-2">
+
+                <label class="block text-sm font-semibold text-gray-700" for="chofer">
+                  Choferes disponibles
+                </label>
+
+                <select th:field="*{chofer}" id="chofer"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                  <option value="">Seleccione un chofer</option>
+                  <option th:each="chofer : ${chofers}"
+                          th:if="${chofer.disponible || (viaje.chofer != null && chofer.id == viaje.chofer.id)}"
+                          th:value="${chofer.id}"
+                          th:text="|${chofer.nombre}|">
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="mt-8 flex justify-end space-x-4">
+
+                <a href="/viajes"
+                   class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  Cancelar
+                </a>
+
+                <button type="submit"
+                        class="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 flex items-center">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Guardar
+                </button>
+
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

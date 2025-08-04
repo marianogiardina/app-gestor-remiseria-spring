@@ -7,11 +7,11 @@ public class Chofer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String nombre;
-    private int dni;
-    private long celular;
+    private Long dni;
+    private Long celular;
     private boolean autoPropio;
     private boolean disponible;
 
@@ -19,12 +19,24 @@ public class Chofer {
     @JoinColumn(name = "auto_id", referencedColumnName = "id")
     private Auto autoAlquilado;
 
-    public int getId() {
+    //Para que no haya errores cuando se elimina un chofer, agrego un atributo eliminado, para hacer un soft delete
+    @Column(name = "eliminado", nullable = false)
+    private boolean eliminado = false;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
     }
 
     public String getNombre() {
@@ -35,19 +47,19 @@ public class Chofer {
         this.nombre = nombre;
     }
 
-    public int getDni() {
+    public Long getDni() {
         return dni;
     }
 
-    public void setDni(int dni) {
+    public void setDni(Long dni) {
         this.dni = dni;
     }
 
-    public long getCelular() {
+    public Long getCelular() {
         return celular;
     }
 
-    public void setCelular(long celular) {
+    public void setCelular(Long celular) {
         this.celular = celular;
     }
 
