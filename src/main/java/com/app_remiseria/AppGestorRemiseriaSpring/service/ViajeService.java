@@ -1,5 +1,7 @@
 package com.app_remiseria.AppGestorRemiseriaSpring.service;
 
+import com.app_remiseria.AppGestorRemiseriaSpring.dto.BalanceMensualDto;
+import com.app_remiseria.AppGestorRemiseriaSpring.dto.SemanaChoferDto;
 import com.app_remiseria.AppGestorRemiseriaSpring.model.Chofer;
 import com.app_remiseria.AppGestorRemiseriaSpring.model.EstadoViaje;
 import com.app_remiseria.AppGestorRemiseriaSpring.model.Viaje;
@@ -8,6 +10,8 @@ import com.app_remiseria.AppGestorRemiseriaSpring.repository.ViajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,6 +48,91 @@ public class ViajeService {
         actualizarDisponibilidadChofer(viaje, "delete");
 
         viajeRepository.deleteById(id);
+    }
+
+    public List<SemanaChoferDto> cerrarSemanaChofer(){
+
+        LocalDateTime fechaFin = LocalDateTime.now();
+        LocalDateTime fechaInicio = LocalDateTime.now().minusDays(7);
+
+        List<SemanaChoferDto> semanaChoferList = viajeRepository.findSemanaChofer(fechaInicio, fechaFin);
+
+        for(SemanaChoferDto semanaChofer : semanaChoferList){
+
+            float porcentajeViaje = semanaChofer.getChofer().isAutoPropio() ? 0.8f : 0.6f;
+
+            semanaChofer.setSueldoSemanal(semanaChofer.getSueldoSemanal() * porcentajeViaje);
+
+        }
+
+        return semanaChoferList;
+    }
+
+    public BalanceMensualDto realizarBalanceMensual(){
+
+        List<BalanceMensualDto> balanceMensualList = viajeRepository.findBalanceMensual(LocalDateTime.now().withDayOfMonth(1), LocalDateTime.now().plusMonths(1).withDayOfMonth(1));
+
+        return procesarDataBalanceMensual(balanceMensualList);
+
+    }
+
+    //En esta funcion lo que hago es utilizar el primer constructor del DTO para procesaro los datos que voy a necesitar en la vista del balance mensual
+    //Recibo la lista con los balances mensuales de los choferes, y a partir de eso creo el DTO con la data que se mostrara en la vista.
+
+    private BalanceMensualDto procesarDataBalanceMensual(List<BalanceMensualDto> listaBalanceMensual) {
+
+        Long totalViajes = 0L;
+        int contadorChoferes = 0;
+        float promedioViajePorChofer; //dividiendo totalViajes / contadorChoferes
+
+
+        int contadorChoferConAutoPropio = 0;
+        int contadorChoferSinAutoPropio = 0;
+        float contadorSueldoChoferConAutoPropio = 0;
+        float contadorSueldoChoferSinAutoPropio = 0;
+        float promedioSueldoChoferConAutoPropio;//dividiendo contadorSueldoChoferConAutoPropio / contadorChoferConAutoPropio
+        float promedioSueldoChoferSinAutoPropio;//dividiendo contadorSueldoChoferSinAutoPropio / contadorChoferSinAutoPropio
+
+        float gananciaMensualPorChoferConAutoPropio;
+        float gananciaMensualPorChoferSinAutoPropio;
+
+        float gananciaMensualTotal;
+
+        for (BalanceMensualDto dto : listaBalanceMensual) {
+
+
+            totalViajes += dto.getCantidadViajesChofer();
+
+            contadorChoferes++;
+
+            if(dto.getChofer().isAutoPropio()){
+
+                contadorChoferConAutoPropio++;
+
+                contadorSueldoChoferConAutoPropio += (float) dto.getSueldoMensualChofer();
+
+            }else {
+
+                contadorChoferSinAutoPropio++;
+
+                contadorSueldoChoferSinAutoPropio += (float) dto.getSueldoMensualChofer();
+
+            }
+
+        }
+
+        promedioViajePorChofer = contadorChoferes == 0 ? 0 : (float) totalViajes / contadorChoferes;
+
+        promedioSueldoChoferConAutoPropio = contadorChoferConAutoPropio == 0 ? 0 : (float) ((contadorSueldoChoferConAutoPropio * 0.8) / contadorChoferConAutoPropio); // 80% del sueldo mensual si tiene auto propio
+        promedioSueldoChoferSinAutoPropio = contadorChoferSinAutoPropio == 0 ? 0 : (float) ((contadorSueldoChoferSinAutoPropio * 0.6) / contadorChoferSinAutoPropio); // 60% del sueldo mensual si no tiene auto propio
+
+        gananciaMensualPorChoferConAutoPropio = (float) (contadorSueldoChoferConAutoPropio * 0.2);
+        gananciaMensualPorChoferSinAutoPropio = (float) (contadorSueldoChoferSinAutoPropio * 0.4);
+
+        gananciaMensualTotal = gananciaMensualPorChoferConAutoPropio + gananciaMensualPorChoferSinAutoPropio;
+
+        return new BalanceMensualDto(totalViajes, gananciaMensualTotal, promedioSueldoChoferSinAutoPropio, promedioSueldoChoferConAutoPropio,
+                gananciaMensualPorChoferSinAutoPropio, gananciaMensualPorChoferConAutoPropio, promedioViajePorChofer);
     }
 
     private void actualizarDisponibilidadChofer(Viaje viaje, String metodo) {
