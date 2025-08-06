@@ -21,6 +21,7 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //Este metodo se utiliza automaticamente por Spring Security para autenticar al usuario
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var usuario = usuarioRepository.findByUsername(username)

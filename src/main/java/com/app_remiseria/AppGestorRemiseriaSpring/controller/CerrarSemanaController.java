@@ -16,7 +16,11 @@ public class CerrarSemanaController {
 
     @GetMapping
     public String cerrarSemana(Model model){
+
         model.addAttribute("semanasChofer", viajeService.cerrarSemanaChofer());
+
+        model.addAttribute("pestañaActiva", "cerrar-semana");
+
         return "cerrar-semana";
     }
 

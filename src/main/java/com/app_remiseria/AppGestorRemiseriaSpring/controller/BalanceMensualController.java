@@ -31,6 +31,7 @@ public class BalanceMensualController {
         model.addAttribute("mes", fechaInicioMes.getMonth().getDisplayName(TextStyle.FULL, new Locale("es", "ES")));
         model.addAttribute("año", fechaInicioMes.getYear());
         model.addAttribute("cantidadDiasMes", LocalDate.now().lengthOfMonth());
+        model.addAttribute("pestañaActiva", "balance");
         return "balance-mensual";
     }
 

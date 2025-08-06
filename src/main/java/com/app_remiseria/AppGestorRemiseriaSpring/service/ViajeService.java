@@ -88,8 +88,10 @@ public class ViajeService {
 
         int contadorChoferConAutoPropio = 0;
         int contadorChoferSinAutoPropio = 0;
+
         float contadorSueldoChoferConAutoPropio = 0;
         float contadorSueldoChoferSinAutoPropio = 0;
+
         float promedioSueldoChoferConAutoPropio;//dividiendo contadorSueldoChoferConAutoPropio / contadorChoferConAutoPropio
         float promedioSueldoChoferSinAutoPropio;//dividiendo contadorSueldoChoferSinAutoPropio / contadorChoferSinAutoPropio
 

@@ -24,21 +24,35 @@ public class ChoferController {
 
     @GetMapping
     public String listAll(Model model){
+
         model.addAttribute("lista",choferService.findAll());
+
+        model.addAttribute("pestañaActiva", "chofer");
+
         return "chofer-lista";
     }
 
     @GetMapping("/crear")
     public String create(Model model){
+
         model.addAttribute("chofer", new Chofer());
+
         model.addAttribute("autos", autoService.findAll());
+
+        model.addAttribute("pestañaActiva", "chofer");
+
         return "chofer-form";
     }
 
     @GetMapping("/editar/{id}")
     public String edit(Model model, @PathVariable Long id){
+
         model.addAttribute("chofer", choferService.findById(id));
+
         model.addAttribute("autos", autoService.findAll());
+
+        model.addAttribute("pestañaActiva", "chofer");
+
         return "chofer-form";
     }
 

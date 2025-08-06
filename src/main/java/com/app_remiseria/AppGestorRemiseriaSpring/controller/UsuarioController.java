@@ -22,6 +22,8 @@ public class UsuarioController {
 
         model.addAttribute("lista", usuarioService.findAll());
 
+        model.addAttribute("pestañaActiva", "usuarios");
+
         return "usuarios-lista";
     }
 
@@ -29,6 +31,8 @@ public class UsuarioController {
     public String create(Model model) {
 
         model.addAttribute("usuario", new Usuario());
+
+        model.addAttribute("pestañaActiva", "usuarios");
 
         return "usuario-form";
     }

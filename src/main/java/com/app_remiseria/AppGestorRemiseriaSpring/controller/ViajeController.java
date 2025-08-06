@@ -1,6 +1,6 @@
 package com.app_remiseria.AppGestorRemiseriaSpring.controller;
 
-import com.app_remiseria.AppGestorRemiseriaSpring.model.Chofer;
+
 import com.app_remiseria.AppGestorRemiseriaSpring.model.EstadoViaje;
 import com.app_remiseria.AppGestorRemiseriaSpring.model.Viaje;
 import com.app_remiseria.AppGestorRemiseriaSpring.service.ChoferService;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @Controller
 @RequestMapping("/viajes")
@@ -25,7 +26,11 @@ public class ViajeController {
 
     @GetMapping
     public String listAll(Model model){
+
         model.addAttribute("lista",viajeService.findAll());
+
+        model.addAttribute("pestañaActiva", "viajes");
+
         return "viajes-lista";
     }
 
@@ -38,6 +43,8 @@ public class ViajeController {
 
         model.addAttribute("estadosViaje", EstadoViaje.values());
 
+        model.addAttribute("pestañaActiva", "viajes");
+
         return "viaje-form";
     }
 
@@ -49,6 +56,8 @@ public class ViajeController {
         model.addAttribute("chofers", choferService.findAll());
 
         model.addAttribute("estadosViaje", EstadoViaje.values());
+
+        model.addAttribute("pestañaActiva", "viajes");
 
         return "viaje-form";
     }

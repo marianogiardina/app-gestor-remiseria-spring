@@ -19,19 +19,31 @@ public class AutoController {
 
     @GetMapping
     public String listAll(Model model){
+
         model.addAttribute("lista",autoService.findAll());
+
+        model.addAttribute("pestañaActiva", "autos");
+
         return "autos-lista";
     }
 
     @GetMapping("/crear")
     public String create(Model model){
+
         model.addAttribute("auto", new Auto());
+
+        model.addAttribute("pestañaActiva", "autos");
+
         return "autos-form";
     }
 
     @GetMapping("/editar/{id}")
     public String edit(Model model, @PathVariable Long id){
+
         model.addAttribute("auto", autoService.findById(id));
+
+        model.addAttribute("pestañaActiva", "autos");
+
         return "autos-form";
     }
 
