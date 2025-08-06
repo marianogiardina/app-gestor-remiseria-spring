@@ -24,6 +24,8 @@ public class ViajeController {
     @Autowired
     private ChoferService choferService;
 
+    //Envio al template viajes-lista la lista de viajes y la pestaña activa
+    //GetMapping no tiene ningun parametro, para que sea /viajes
     @GetMapping
     public String listAll(Model model){
 
@@ -34,6 +36,8 @@ public class ViajeController {
         return "viajes-lista";
     }
 
+    //Envio al template viaje-form un nuevo objeto vacio de viaje para crear uno nuevo
+    //y la lista de choferes y estados de viaje
     @GetMapping("/crear")
     public String create(Model model){
 
@@ -48,6 +52,8 @@ public class ViajeController {
         return "viaje-form";
     }
 
+    //Envio al template viaje-form un objeto viaje que se busca por id desde la bbdd y los choferes
+    //y estados de viaje para editarlo
     @GetMapping("/editar/{id}")
     public String edit(Model model, @PathVariable Long id){
 

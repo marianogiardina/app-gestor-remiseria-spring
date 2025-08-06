@@ -18,6 +18,8 @@ public class ChoferService {
     @Autowired
     AutoService autoService;
 
+    //Como con chofer realice un sof delete,
+    //para que no se vean los choferes eliminados, filtro el listAll por default de spring y lo envio
     public List<Chofer> findAll(){
 
         List<Chofer> choferesActivos = new ArrayList<>();
@@ -80,6 +82,7 @@ public class ChoferService {
                     if(autoSinActualizar != null) {
                         // Si el chofer tiene auto propio, el auto alquilado se marca como disponible
                         autoSinActualizar.setDisponible(true);
+
                         autoService.save(autoSinActualizar);
                     }
                 }
@@ -87,14 +90,19 @@ public class ChoferService {
                 if (auto != null && !chofer.isAutoPropio()) {
 
                     auto.setDisponible(false);
+
                     autoService.save(auto);
                 }
                 break;
 
             case "delete":
+
                 if (auto != null && !chofer.isAutoPropio()) {
+
                     chofer.setAutoAlquilado(null);
+
                     auto.setDisponible(true);
+
                     autoService.save(auto);
                 }
                 break;

@@ -15,6 +15,7 @@ import java.util.List;
 @Repository
 public interface ViajeRepository extends JpaRepository<Viaje,Long> {
 
+    //Realizo querys perso para obtener los datos que necesito para los reportes
     @Query("SELECT new com.app_remiseria.AppGestorRemiseriaSpring.dto.SemanaChoferDto(v.chofer, COUNT(v), SUM(v.kilometros), SUM(v.kilometros * v.valorKm)) " +
             "FROM Viaje v " +
             "WHERE v.estadoViaje = 'FINALIZADO' AND v.fecha BETWEEN :fechaInicio AND :fechaFin AND v.chofer.eliminado = false " +

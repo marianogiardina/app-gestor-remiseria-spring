@@ -17,6 +17,8 @@ public class SecurityConfig {
     @Autowired
     private UsuarioService usuarioService;
 
+    //Este metodo se encarga de proteger las rutas de la aplicacion
+    //Tambien se encarga de configurar el login y el logout, y redireccionar una vez que el usuario se loguea
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

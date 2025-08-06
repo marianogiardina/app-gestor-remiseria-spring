@@ -18,6 +18,8 @@ public class BalanceMensualController {
     @Autowired
     private ViajeService viajeService;
 
+    //En este metodo envio muchos datos de fechas, para utilizar en la vista.
+    //Ademas envio el balance mensual que es un dto
     @GetMapping
     public String getBalance(Model model){
 
@@ -32,6 +34,7 @@ public class BalanceMensualController {
         model.addAttribute("año", fechaInicioMes.getYear());
         model.addAttribute("cantidadDiasMes", LocalDate.now().lengthOfMonth());
         model.addAttribute("pestañaActiva", "balance");
+
         return "balance-mensual";
     }
 
